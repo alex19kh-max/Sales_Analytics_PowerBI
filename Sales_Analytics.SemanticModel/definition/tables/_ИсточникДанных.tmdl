@@ -1,0 +1,48 @@
+table _ИсточникДанных
+	lineageTag: d296d261-6705-4593-ad2f-c761e4fc72d6
+
+	column Name
+		dataType: string
+		lineageTag: e95481f4-e176-4659-a52c-67243b2844d1
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Item
+		dataType: string
+		lineageTag: 8c153364-af87-4c81-8495-3f474d2fd446
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = Automatic
+
+	column Kind
+		dataType: string
+		lineageTag: 5bd334c6-8f68-4e1a-aede-dfec500e25f3
+		summarizeBy: none
+		sourceColumn: Kind
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hidden
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4dc23918-2d72-4c89-9dc9-5ed8e51ada0e
+		summarizeBy: none
+		sourceColumn: Hidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _ИсточникДанных = m
+		mode: import
+		source =
+				let
+				    Источник = Excel.Workbook(Web.Contents("https://docs.google.com/spreadsheets/d/1OObWrvhvYo5_PsLNpYN3ngbgXCMqc112TBvVsPGv9iY/export?format=xlsx"), null, true)
+				in
+				    Источник
+
+	annotation PBI_NavigationStepName = Навигация
+
+	annotation PBI_ResultType = Table
+

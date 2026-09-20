@@ -1,0 +1,28 @@
+model Model
+	culture: ru-RU
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: ru-RU
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["_ИсточникДанных","fxОчиститьТаблицу","ВсеТаблицы","Продажи","СПР_стоимость_доставки","СПР_даты_заказа","СПР_продукты","СПР_покупатели","СПР_Менеджеры"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table _ИсточникДанных
+ref table ВсеТаблицы
+ref table Продажи
+ref table СПР_стоимость_доставки
+ref table СПР_даты_заказа
+ref table DateTableTemplate_283985dc-e3ad-4534-b545-7670702ebf9b
+ref table LocalDateTable_0fb0e08c-99de-4f64-85f0-d575b1d29751
+ref table СПР_продукты
+ref table СПР_покупатели
+ref table СПР_Менеджеры
+ref table Календарь
+
+ref cultureInfo ru-RU
+

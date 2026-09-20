@@ -1,0 +1,124 @@
+table Продажи
+	lineageTag: 20b47f70-bb04-4734-8327-07e332d39bb7
+
+	column Order_ID
+		dataType: double
+		lineageTag: 5432f61a-50a2-46a8-baf6-ff10d0321da1
+		summarizeBy: none
+		sourceColumn: Order_ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Приоритет
+		dataType: string
+		lineageTag: deaaeaf6-fba1-4455-a438-053eb413fb2a
+		summarizeBy: none
+		sourceColumn: Приоритет
+
+		annotation SummarizationSetBy = Automatic
+
+	column Количество
+		dataType: double
+		lineageTag: 8a12c9b9-250b-4bad-83af-fabdf634e74f
+		summarizeBy: sum
+		sourceColumn: Количество
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Выручка
+		dataType: decimal
+		formatString: #,0.###############\ "₽";-#,0.###############\ "₽";#,0.###############\ "₽"
+		lineageTag: ef308a56-6c84-45c9-b5d1-b8471cde5ca4
+		summarizeBy: sum
+		sourceColumn: Выручка
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"ru-RU"}
+
+	column 'Метод доставки'
+		dataType: string
+		lineageTag: 7e13ea50-6e2b-426a-9e0f-c4199b84d782
+		summarizeBy: none
+		sourceColumn: Метод доставки
+
+		annotation SummarizationSetBy = Automatic
+
+	column Прибыль
+		dataType: decimal
+		formatString: #,0.###############\ "₽";-#,0.###############\ "₽";#,0.###############\ "₽"
+		lineageTag: 4212913e-435f-460c-b94b-8e488cc24959
+		summarizeBy: sum
+		sourceColumn: Прибыль
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"ru-RU"}
+
+	column Покупатель
+		dataType: string
+		lineageTag: 8962a456-d58c-49b7-b12b-5406ab2c2637
+		summarizeBy: none
+		sourceColumn: Покупатель
+
+		annotation SummarizationSetBy = Automatic
+
+	column Регион
+		dataType: string
+		lineageTag: a6a4e6c2-d3ba-49b7-8547-5840c032e5be
+		summarizeBy: none
+		sourceColumn: Регион
+
+		annotation SummarizationSetBy = Automatic
+
+	column Продукт
+		dataType: string
+		lineageTag: ff38fadd-7bb8-4071-a6de-cabebdedc5c8
+		summarizeBy: none
+		sourceColumn: Продукт
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Упаковка продукта'
+		dataType: string
+		lineageTag: 6c31fd6e-80f9-44cb-ac86-56fcf87f6503
+		summarizeBy: none
+		sourceColumn: Упаковка продукта
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Продажи = m
+		mode: import
+		source = ```
+				let
+				    // 1. Берем наш базовый источник (книгу Excel из интернета)
+				    Source = _ИсточникДанных,
+				    
+				    // 2. Оставляем только строки, которые являются листами (Sheet)
+				    OnlySheets = Table.SelectRows(Source, each ([Kind] = "Sheet")),
+				    
+				    // 3. Удаляем служебные столбцы, оставляем только Имя листа и Данные
+				    RemovedColumns = Table.SelectColumns(OnlySheets,{"Name", "Data"}),
+				    
+				    // 4. Автоматически применяем функцию fxОчиститьТаблицу ко всем листам сразу
+				    CleanedData = Table.TransformColumns(RemovedColumns, {{"Data", each fxОчиститьТаблицу(_), type table}}),
+				    
+				    // 5. ИСПРАВЛЕНИЕ: Переименовываем столбец "Data" в "Value" для корректной работы Record.FromTable
+				    RenamedForRecord = Table.RenameColumns(CleanedData,{{"Data", "Value"}}),
+				    
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    TableRecord = Record.FromTable(RenamedForRecord),
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    Продажи1 = TableRecord[Продажи]
+				in
+				    Продажи1
+				```
+
+	annotation PBI_NavigationStepName = Навигация
+
+	annotation PBI_ResultType = Table
+

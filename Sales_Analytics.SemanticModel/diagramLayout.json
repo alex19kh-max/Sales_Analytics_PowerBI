@@ -1,0 +1,139 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 572,
+        "y": 380
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 2410.1538812484255,
+            "y": 492.37033555473477
+          },
+          "nodeIndex": "_ИсточникДанных",
+          "nodeLineageTag": "d296d261-6705-4593-ad2f-c761e4fc72d6",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2694.1538812484255,
+            "y": 516.37033555473477
+          },
+          "nodeIndex": "ВсеТаблицы",
+          "nodeLineageTag": "8fbe4125-6a53-44e7-9d17-5cfda6b680b9",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.17161936498456,
+            "y": 128.19581185014474
+          },
+          "nodeIndex": "Продажи",
+          "nodeLineageTag": "20b47f70-bb04-4734-8327-07e332d39bb7",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 521.97426117388477,
+            "y": -50
+          },
+          "nodeIndex": "СПР_даты_заказа",
+          "nodeLineageTag": "de79c02a-267f-4a73-9d57-99a732cce718",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.35389618663567,
+            "y": 407.93763587156786
+          },
+          "nodeIndex": "СПР_Менеджеры",
+          "nodeLineageTag": "89ed0566-0469-40dd-b569-72349339a7ec",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 852.35389618663567,
+            "y": 276.18946355687672
+          },
+          "nodeIndex": "СПР_покупатели",
+          "nodeLineageTag": "66911039-8c6e-401a-bed7-236a090e5fc5",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 126.73190550335715,
+            "y": 478.37892711375343
+          },
+          "nodeIndex": "СПР_продукты",
+          "nodeLineageTag": "f2025218-08d5-4a75-a322-8a3dadfd1d03",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -16.677030161064977
+          },
+          "nodeIndex": "СПР_стоимость_доставки",
+          "nodeLineageTag": "b4cce9c8-7176-438d-ae8b-b23ef0cba40f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2928.1538812484255,
+            "y": 259.18516777736738
+          },
+          "nodeIndex": "Календарь",
+          "nodeLineageTag": "c31c89ef-3b4e-4f51-bc76-efdbb9cb8b9c",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Все таблицы",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Все таблицы",
+  "defaultDiagram": "Все таблицы"
+}

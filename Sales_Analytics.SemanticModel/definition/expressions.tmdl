@@ -1,0 +1,54 @@
+expression fxОчиститьТаблицу = ```
+		(RawSheet as table) as table =>
+		let
+		    // 1. Повышаем первую строку в заголовки
+		    PromotedHeaders = Table.PromoteHeaders(RawSheet, [PromoteAllScalars=true]),
+		    
+		    // 2. Полностью удаляем пустые и пустые текстовые строки
+		    RemovedBlankRows = Table.SelectRows(PromotedHeaders, each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+		    
+		    // 3. Очищаем текст от скрытых веб-пробелов (Character 160) и обычных пробелов (разделителей тысяч)
+		    CleanSpaces = Table.TransformColumns(RemovedBlankRows, 
+		        List.Transform(Table.ColumnNames(RemovedBlankRows), (col) => 
+		            {col, each if _ is text then Text.Replace(Text.Replace(_, Character.FromNumber(160), ""), " ", "") else _, type any}
+		        )
+		    ),
+		
+		    // 4. Универсальное определение типов на основе анализа содержимого (без привязки к именам колонок)
+		    CustomTypesMap = List.Transform(Table.ColumnNames(CleanSpaces), (colName) =>
+		        let
+		            RawValues = List.FirstN(Table.Column(CleanSpaces, colName), 50),
+		            // Оставляем только непустые значения для анализа
+		            FirstValues = List.Select(RawValues, each _ <> null and _ <> ""),
+		            FirstVal = if List.IsEmpty(FirstValues) then "" else Text.From(List.First(FirstValues)),
+		            
+		            // Проверяем, является ли значение числом (пробуем американский и русский форматы)
+		            ParsedNumEn = try Number.FromText(FirstVal, "en-US"),
+		            ParsedNumRu = try Number.FromText(FirstVal, "ru-RU"),
+		            IsNumeric = ParsedNumEn[HasError] = false or ParsedNumRu[HasError] = false,
+		            
+		            // Проверяем, является ли значение датой
+		            ParsedDate = try Date.FromText(FirstVal),
+		            IsDate = ParsedDate[HasError] = false,
+		
+		            // Определяем финальный тип на основе структуры данных
+		            TargetType = 
+		                if IsDate then type date
+		                else if IsNumeric then 
+		                    // Если число дробное (содержит точку/запятую) — делаем его фиксированной валютой или десятичным
+		                    if Text.Contains(FirstVal, ".") or Text.Contains(FirstVal, ",") then Currency.Type 
+		                    else type number
+		                else type text
+		        in {colName, TargetType}),
+		         
+		    // 5. Применяем типы данных (используем "en-US", так как копейки в источнике разделены точкой)
+		    FinalTable = Table.TransformColumnTypes(CleanSpaces, CustomTypesMap, "en-US")
+		in
+		    FinalTable
+		```
+	lineageTag: 0f5cbf1e-1b6a-4d53-b3e9-4e1324b30759
+
+	annotation PBI_NavigationStepName = Навигация
+
+	annotation PBI_ResultType = Function
+

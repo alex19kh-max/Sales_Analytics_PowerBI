@@ -1,0 +1,58 @@
+table Календарь
+	lineageTag: c31c89ef-3b4e-4f51-bc76-efdbb9cb8b9c
+
+	column Дата
+		isKey
+		formatString: Long Date
+		lineageTag: ad8cf690-344c-473d-88f6-285b736b446f
+		summarizeBy: none
+		sourceColumn: [Date]
+
+	column Год
+		formatString: 0
+		lineageTag: aaa1e511-7ee4-4b97-81f6-2f72d40495bb
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Год]
+
+		annotation SummarizationSetBy = Automatic
+
+	column НомерМесяца
+		formatString: 0
+		lineageTag: 2729a1b5-0f3e-4c38-acb6-88dad6f9aabd
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [НомерМесяца]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Месяц
+		lineageTag: 96c289d8-e960-4458-bdb0-db7f4b1e6d95
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Месяц]
+		sortByColumn: НомерМесяца
+
+		annotation SummarizationSetBy = Automatic
+
+	column Квартал
+		lineageTag: 9f6779d7-6bf7-43e9-b75a-ea1b4ddfac7a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Квартал]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Календарь-Calculated = calculated
+		source = ```
+				
+				ADDCOLUMNS (
+				    CALENDARAUTO(),
+				    "Год", YEAR ( [Date] ),
+				    "НомерМесяца", MONTH ( [Date] ),
+				    "Месяц", FORMAT ( [Date], "MMMM", "ru-RU" ),
+				    "Квартал", "Кв. " & FORMAT ( [Date], "Q" )
+				)
+				
+				```
+

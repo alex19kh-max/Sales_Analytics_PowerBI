@@ -1,0 +1,60 @@
+table СПР_даты_заказа
+	lineageTag: de79c02a-267f-4a73-9d57-99a732cce718
+
+	column Order_ID
+		dataType: double
+		lineageTag: 9c6a962f-f959-49aa-ac2b-d1f5ae21f8bf
+		summarizeBy: none
+		sourceColumn: Order_ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Дата
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0042d6dc-40df-4331-9f8c-f78de3754188
+		summarizeBy: none
+		sourceColumn: Дата
+
+		variation Изменение
+			isDefault
+			relationship: 06338c7e-5b5d-4280-857f-8b4490c5330c
+			defaultHierarchy: LocalDateTable_0fb0e08c-99de-4f64-85f0-d575b1d29751.'Иерархия дат'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition СПР_даты_заказа = m
+		mode: import
+		source = ```
+				let
+				    // 1. Берем наш базовый источник (книгу Excel из интернета)
+				    Source = _ИсточникДанных,
+				    
+				    // 2. Оставляем только строки, которые являются листами (Sheet)
+				    OnlySheets = Table.SelectRows(Source, each ([Kind] = "Sheet")),
+				    
+				    // 3. Удаляем служебные столбцы, оставляем только Имя листа и Данные
+				    RemovedColumns = Table.SelectColumns(OnlySheets,{"Name", "Data"}),
+				    
+				    // 4. Автоматически применяем функцию fxОчиститьТаблицу ко всем листам сразу
+				    CleanedData = Table.TransformColumns(RemovedColumns, {{"Data", each fxОчиститьТаблицу(_), type table}}),
+				    
+				    // 5. ИСПРАВЛЕНИЕ: Переименовываем столбец "Data" в "Value" для корректной работы Record.FromTable
+				    RenamedForRecord = Table.RenameColumns(CleanedData,{{"Data", "Value"}}),
+				    
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    TableRecord = Record.FromTable(RenamedForRecord),
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    СПР_даты_заказа1 = TableRecord[СПР_даты_заказа]
+				in
+				    СПР_даты_заказа1
+				```
+
+	annotation PBI_NavigationStepName = Навигация
+
+	annotation PBI_ResultType = Table
+

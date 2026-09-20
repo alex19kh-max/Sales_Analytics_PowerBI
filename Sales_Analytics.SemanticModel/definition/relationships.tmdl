@@ -1,0 +1,21 @@
+relationship 06338c7e-5b5d-4280-857f-8b4490c5330c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: СПР_даты_заказа.Дата
+	toColumn: LocalDateTable_0fb0e08c-99de-4f64-85f0-d575b1d29751.Date
+
+relationship AutoDetected_dcaaaeca-ab76-486a-9f80-39321410779b
+	fromColumn: Продажи.Order_ID
+	toColumn: СПР_даты_заказа.Order_ID
+
+relationship AutoDetected_a09b2db4-2c76-4697-a0de-cb2ae04e9db6
+	fromColumn: Продажи.'Метод доставки'
+	toColumn: СПР_стоимость_доставки.'Метод доставки'
+
+relationship AutoDetected_6086e6c3-5062-442a-a49b-ec4024e222ee
+	fromColumn: Продажи.Регион
+	toColumn: СПР_Менеджеры.Регион
+
+relationship AutoDetected_c76a19a4-bf6b-40f0-a5a2-03f3006bc3bc
+	fromColumn: Продажи.Продукт
+	toColumn: СПР_продукты.Продукт
+

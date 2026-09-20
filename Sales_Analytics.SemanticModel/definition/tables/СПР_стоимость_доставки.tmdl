@@ -1,0 +1,52 @@
+table СПР_стоимость_доставки
+	lineageTag: b4cce9c8-7176-438d-ae8b-b23ef0cba40f
+
+	column 'Метод доставки'
+		dataType: string
+		lineageTag: 32620c2f-f50a-4444-8ae2-d0446b8a5d8b
+		summarizeBy: none
+		sourceColumn: Метод доставки
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Стоимость доставки'
+		dataType: double
+		lineageTag: 7d341239-b5fe-4d82-accb-2dccc596d48b
+		summarizeBy: none
+		sourceColumn: Стоимость доставки
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition СПР_стоимость_доставки = m
+		mode: import
+		source = ```
+				let
+				    // 1. Берем наш базовый источник (книгу Excel из интернета)
+				    Source = _ИсточникДанных,
+				    
+				    // 2. Оставляем только строки, которые являются листами (Sheet)
+				    OnlySheets = Table.SelectRows(Source, each ([Kind] = "Sheet")),
+				    
+				    // 3. Удаляем служебные столбцы, оставляем только Имя листа и Данные
+				    RemovedColumns = Table.SelectColumns(OnlySheets,{"Name", "Data"}),
+				    
+				    // 4. Автоматически применяем функцию fxОчиститьТаблицу ко всем листам сразу
+				    CleanedData = Table.TransformColumns(RemovedColumns, {{"Data", each fxОчиститьТаблицу(_), type table}}),
+				    
+				    // 5. ИСПРАВЛЕНИЕ: Переименовываем столбец "Data" в "Value" для корректной работы Record.FromTable
+				    RenamedForRecord = Table.RenameColumns(CleanedData,{{"Data", "Value"}}),
+				    
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    TableRecord = Record.FromTable(RenamedForRecord),
+				    // 6. Превращаем результат в структуру записей для мгновенного извлечения
+				    СПР_стоимость_доставки1 = TableRecord[СПР_стоимость_доставки]
+				in
+				    СПР_стоимость_доставки1
+				```
+
+	annotation PBI_NavigationStepName = Навигация
+
+	annotation PBI_ResultType = Table
+
